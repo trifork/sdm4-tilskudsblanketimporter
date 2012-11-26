@@ -1,0 +1,36 @@
+9699767;Default blanket
+9699940;Enkelttilskud
+17336228;Elidel
+17336448;Lantus og Levemir
+17336489;Lantus/Levemir genansøgning
+17336750;Protopic
+17336699;Pancreaseenzymer
+17679789;Forhøjet tilskud
+17862888;Persantin
+17690096;Forsteo/Preotact
+19595429;Clopidogrel
+20526782;Terminal
+21439031;Toctino
+22228873;Lyrica
+22229004;Cymbalta
+23822711;Ebixa genansøgning
+24228702;Aricept/Exelon/Reminyl genansøgning
+24194161;Mirena
+24246723;Atomoxetin
+24246132;Imiquimod - Aldara
+24246754;Atomoxetin genansøgning
+24881182;Kroniker_kopi
+24246800;Donedaron - Multaq
+24300127;PPI_ ala Forhøjet tilskud
+24351595;Bisfosfonater Prolia, Aclasta inj, Bonviva inj.
+24412829;Ebixa
+25718811;A2A
+25773900;Gabapentin
+25780969;Kroniker
+26074144;Test
+26086533;Bisfosfonater Evista Protelos
+26145961;Bisfosfonater_ny_inj
+26146394;Bisfosfonater_ny
+26150263;Bisfosfonater_ny_alendronat
+26220615;Aricept/Exelon/Reminyl
+26643664;Methylphenidat

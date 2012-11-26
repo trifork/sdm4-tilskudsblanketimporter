@@ -1,0 +1,197 @@
+25718811;0;Atacand;Peroral
+24228702;1;Aricept, Exelon, Reminyl;Peroral
+26220615;0;Aricept, Exelon, Reminyl;Peroral
+24300127;0;Cytotec;Peroral
+25718811;0;CoAprovel;Peroral
+26643664;0;Ritalin;tabletter
+24300127;0;Zantac;infusionskoncentrat
+24300127;0;Cytotec;tabletter
+26146394;0;Bonefos;filmovertrukne tabletter
+24246132;0;Aldara;creme
+25718811;0;Aprovel;tabletter
+24228702;1;Exelon;oral opløsning
+26220615;0;Exelon;oral opløsning
+24300127;0;Zantac;brusetabletter
+26146394;0;Didronel;tabletter
+25773900;0;Gabapentin "AbZ";kapsler, hårde
+25773900;0;Gabapentin "Trommsdorff";kapsler
+25773900;0;Gabapentin "PCD";kapsler, hårde
+25773900;0;Gabapentin "Stada";kapsler, hårde
+25773900;0;Gabapentin "Paranova";kapsler
+25773900;0;Gabapentin "Pfizer";filmovertrukne tabletter
+25773900;0;Gabapentin "Pfizer";kapsler, hårde
+25773900;0;Gabapentin "Pliva";kapsler
+25773900;0;Gabapentin "Pliva";kapsler, hårde
+25773900;0;Gabapentin "DuraScan";kapsler, hårde
+25773900;0;Gabapentin "Actavis";kapsler
+25773900;0;Gabapentin "Desitin";kapsler, hårde
+26150263;0;Fosamax Ugetablet;tabletter
+17690096;0;Forsteo;injektionsvæske, opløsning
+25773900;0;Gabapentin "CT";kapsler, hårde
+24246132;0;Solaraze;gel
+25718811;0;Benetor;filmovertrukne tabletter
+26146394;0;Protelos;granulat til oral suspension
+23822711;1;Ebixa;filmovertrukne tabletter
+24412829;0;Ebixa;filmovertrukne tabletter
+25773900;0;Gabapentin "Alpharma";kapsler, hårde
+24300127;0;Ranitidin "Ratiopharm";filmovertrukne tabletter
+25773900;0;Neuril;kapsler, hårde
+26643664;0;Motiron;tabletter
+23822711;1;Ebixa;orale dråber, opløsning
+24412829;0;Ebixa;orale dråber, opløsning
+25718811;0;MicardisPlus;tabletter
+25718811;0;PritorPlus;tabletter
+25773900;0;Gabapentin "Orifarm";kapsler, hårde
+25773900;0;Gabapentin "IVAX";kapsler, hårde
+24300127;0;Zantac;filmovertrukne tabletter
+25773900;0;Gabapentin "Parke-Davis";kapsler
+25718811;0;Diovan Comp 160 mg/12,5 mg;filmovertrukne tabletter
+25718811;0;Micardis;tabletter
+25718811;0;Pritor;tabletter
+25718811;0;CoAprovel;tabletter
+24300127;0;Ranitidin "Alpharma";filmovertrukne tabletter
+26150263;0;Alendronat "Teva";tabletter
+25718811;0;Atazid;tabletter
+24228702;1;Prometax;kapsler, hårde
+26220615;0;Prometax;kapsler, hårde
+26146394;0;Bonviva;filmovertrukne tabletter
+25773900;0;Gabapentin "Copyfarm";kapsler, hårde
+17690096;0;Preotact;pulver og solvens til infusionsvæske, opløsning
+24246723;0;Strattera;kapsler, hårde
+24246754;1;Strattera;kapsler, hårde
+25718811;0;Olmetec Plus;filmovertrukne tabletter
+25718811;0;Hytacand;tabletter
+25718811;0;Tareg;filmovertrukne tabletter
+26643664;0;Equasym;tabletter
+26643664;0;Ritalin Uno;kapsler med modificeret udløsning, hårde
+24228702;1;Exelon;kapsler, hårde
+26220615;0;Exelon;kapsler, hårde
+25718811;0;Diovan Comp 80 mg/12,5 mg;filmovertrukne tabletter
+25773900;0;Gabapentin "Parke-Davis";filmovertrukne tabletter
+25773900;0;Gabapentin "1A Farma";kapsler, hårde
+24300127;0;Ranicodan;filmovertrukne tabletter
+26146394;0;Bondronat;filmovertrukne tabletter
+25718811;0;CoAprovel;filmovertrukne tabletter
+25718811;0;Aprovel;filmovertrukne tabletter
+25718811;0;Atacand;tabletter
+25718811;0;Cotareg;filmovertrukne tabletter
+24300127;0;Pariet;enterotabletter
+25718811;0;Amias;tabletter
+25718811;0;Ratacand Zid;tabletter
+24228702;1;Aricept;filmovertrukne tabletter
+26220615;0;Aricept;filmovertrukne tabletter
+24300127;0;Kuracid;filmovertrukne tabletter
+24300127;0;Syrex;filmovertrukne tabletter
+24228702;1;Exelon;depotplastre
+26220615;0;Exelon;depotplastre
+25718811;0;Corixil;filmovertrukne tabletter
+24194161;0;Mirena;intrauterint indlæg
+25718811;0;Diovan Comp 320 mg/12,5 mg;filmovertrukne tabletter
+25718811;0;Diovan Comp 320 mg/25 mg;filmovertrukne tabletter
+25773900;0;Gabapentin "Bluefish";kapsler, hårde
+25773900;0;Gabapentin "Actavis";kapsler, hårde
+24300127;0;Nexium mups;enterotabletter
+24228702;1;Memac;filmovertrukne tabletter
+26220615;0;Memac;filmovertrukne tabletter
+26643664;0;Equasym Depot;kapsler med modificeret udløsning, hårde
+25718811;0;Co-Diovan 160 mg/12,5 mg;filmovertrukne tabletter
+25718811;0;Co-Diovan Forte 160 mg/25 mg;filmovertrukne tabletter
+25718811;0;Exforge;filmovertrukne tabletter
+26220615;0;Reminyl Retard;depotkapsler, hårde
+26643664;0;Medikinet;tabletter
+26643664;0;Medikinet CR;kapsler med modificeret udløsning, hårde
+26150263;0;Alendronat "Merck NM";tabletter
+25773900;0;Lyrica;kapsler, hårde
+24300127;0;INexium;enterotabletter
+25773900;0;Gabapentin "Nycomed";kapsler, hårde
+25718811;0;Tarka;tabletter med modificeret udløsning
+25718811;0;Teveten;filmovertrukne tabletter
+25718811;0;Olmetec;filmovertrukne tabletter
+24300127;0;Esopral;enterotabletter
+25718811;0;Diovan Comp 160 mg/25 mg;filmovertrukne tabletter
+24228702;1;Reminyl;depotkapsler, hårde
+26220615;0;Reminyl;depotkapsler, hårde
+25773900;0;Gabapentin "ratiopharm";filmovertrukne tabletter
+26145961;0;Bonviva;injektionsvæske, opløsning, fyldt injektionssprøjte
+26150263;0;Alendronat "Arrow";tabletter
+26150263;0;Alendronat "Stada";tabletter
+25718811;0;Diovan Comp;filmovertrukne tabletter
+26146394;0;Fosavance;tabletter
+26146394;0;Optinate Septimum;filmovertrukne tabletter
+24300127;0;Inexium;enterotabletter
+24300127;0;Nexium;pulver til injektions- og infusionsvæske, opløsning
+26145961;0;Aclasta;infusionsvæske, opløsning
+25718811;0;Teveten Comp;filmovertrukne tabletter
+17690096;0;Preotact;pulver og solvens til injektionsvæske, opløsning
+24300127;0;Nexium;enterotabletter
+25718811;0;Ratacand Plus;tabletter
+25718811;0;Co-Diovan;filmovertrukne tabletter
+25718811;0;Diovan;filmovertrukne tabletter
+22229004;0;Xeristar;enterokapsler, hårde
+22229004;0;Cymbalta;enterokapsler, hårde
+25718811;0;Ratacand;tabletter
+24228702;1;Donepezil "Teva";smeltetabletter
+26220615;0;Donepezil "Teva";smeltetabletter
+26150263;0;Alendronat "Orifarm";tabletter
+26146394;0;Risedronatnatrium "Teva";filmovertrukne tabletter
+24300127;0;Nexium;enterogranulat til oral suspension
+26150263;0;Alendronat "Actavis";tabletter
+24300127;0;Esomeprazol "Sandoz";enterotabletter
+25718811;0;Atacand Zid 16 mg/12,5 mg;tabletter
+25718811;0;Atacand Zid 8 mg/12,5 mg;tabletter
+25718811;0;Atacand Zid 32 mg/12,5 mg;tabletter
+25718811;0;Atacand Zid 32mg /25 mg;tabletter
+24300127;0;Ranitidin "Actavis";filmovertrukne tabletter
+24246800;0;Multaq;filmovertrukne tabletter
+26643664;0;Concerta;depottabletter
+25718811;0;Exforge HCT;filmovertrukne tabletter
+26150263;0;Alendronat "Mylan";tabletter
+25718811;0;Valsartan "Actavis";filmovertrukne tabletter
+24228702;1;Donepezilhydrochlorid "Actavis";filmovertrukne tabletter
+26220615;0;Donepezilhydrochlorid "Actavis";filmovertrukne tabletter
+26146394;0;Risedronatnatrium "Actavis";filmovertrukne tabletter
+24228702;1;Reminyl XL;depotkapsler, hårde
+26220615;0;Reminyl XL;depotkapsler, hårde
+24300127;0;Esomeprazol "Krka";enterokapsler, hårde
+24228702;1;Doneprion;filmovertrukne tabletter
+26220615;0;Doneprion;filmovertrukne tabletter
+24228702;1;Rivastigmin "Orifarm";kapsler, hårde
+26220615;0;Rivastigmin "Orifarm";kapsler, hårde
+24228702;1;Reminyl LP;depotkapsler, hårde
+26220615;0;Reminyl LP;depotkapsler, hårde
+24228702;1;Rivastigmine "Sandoz";kapsler, hårde
+26220615;0;Rivastigmine "Sandoz";kapsler, hårde
+24228702;1;Donepezil "Sandoz";filmovertrukne tabletter
+26220615;0;Donepezil "Sandoz";filmovertrukne tabletter
+26145961;0;Prolia;injektionsvæske, opløsning
+26146394;0;Riseratio;filmovertrukne tabletter
+26146394;0;Risostad;filmovertrukne tabletter
+25718811;0;Diovan;oral opløsning
+26150263;0;Alendronat "Bluefish";tabletter
+25773900;0;Gabadane;kapsler, hårde
+26150263;0;Alendronat "Pfizer";tabletter
+25773900;0;Gabapentin "2care4";filmovertrukne tabletter
+24228702;1;Galantamin "Krka";depotkapsler, hårde
+26220615;0;Galantamin "Krka";depotkapsler, hårde
+24228702;1;Donepezil "Pfizer";filmovertrukne tabletter
+26220615;0;Donepezil "Pfizer";filmovertrukne tabletter
+25718811;0;Candesartan "Krka";tabletter
+24228702;1;Donepezil "Stada";filmovertrukne tabletter
+24228702;1;Rivastigmine "Actavis";kapsler, hårde
+24228702;1;Rivastigmin "Stada";kapsler, hårde
+25773900;0;Gabapentin "EuroPharma";filmovertrukne tabletter
+24228702;1;Donepezilhydrochlorid "Accord";filmovertrukne tabletter
+26220615;0;Donepezilhydrochlorid "Accord";filmovertrukne tabletter
+25718811;0;Candemox;tabletter
+26146394;0;Risedronat "Orifarm";filmovertrukne tabletter
+24228702;1;Galantamin "Teva";depotkapsler, hårde
+26220615;0;Galantamin "Teva";depotkapsler, hårde
+26643664;0;Methylphenidate "Sandoz";depottabletter
+26643664;0;Methylphenidate "Hexal";depottabletter
+25718811;0;Candesartancilexetil "Actavis";tabletter
+24228702;1;Donepezil "Bluefish";filmovertrukne tabletter
+26643664;0;Ritalina LA;kapsler med modificeret udløsning, hårde
+24228702;1;Donepezil "Krka";filmovertrukne tabletter
+26220615;0;Donepezil "Krka";filmovertrukne tabletter
+26146394;0;Ibandronsyre "Sandoz";filmovertrukne tabletter
+9699940;0;;
