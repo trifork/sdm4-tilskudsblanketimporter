@@ -31,7 +31,7 @@ import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
 import static dk.nsi.sdm4.core.persistence.recordpersister.FieldSpecification.field;
 
 /**
- * Specifikation af feltlænger og -navne for de fire typer data i vitamin-filerne.
+ * Specifikation af feltlænger og -navne for de forskellige balnkettyper
  */
 public class TilskudsblanketRecordSpecs {
 	
@@ -59,5 +59,29 @@ public class TilskudsblanketRecordSpecs {
             field("dosisdispensering", 1),
 		    field("blank", 8).ignored(),
 		    field("karantaeneDato", 8));
+    
+    
+	public static final RecordSpecification BLANKET_RECORD_SPEC = RecordSpecification.createSpecification("Tilskudsblanket", "BlanketId", 
+            field("BlanketId", 15).numerical(),
+            field("BlanketTekst", 21000));
+
+
+	public static final RecordSpecification BLANKET_ENKELTTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketEnkelt", "BlanketId", 
+            field("BlanketId", 15).numerical(),
+            field("Genansoegning", 1).numerical(),
+            field("Navn", 100),
+            field("Form", 100));
+
+	public static final RecordSpecification BLANKET_FORHOJETTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketForhoejet", "BlanketId", 
+            field("BlanketId", 15).numerical(),
+            field("DrugId", 12).numerical());
+
+
+	public static final RecordSpecification BLANKET_KRONIKERTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketKroniker", "BlanketId", 
+            field("BlanketId", 15).numerical(),
+            field("Genansoegning", 1).numerical());
+
+	public static final RecordSpecification BLANKET_TERMINALTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketTerminal", "BlanketId", 
+            field("BlanketId", 15).numerical());
     
 }

@@ -72,7 +72,11 @@ public class TilskudsblanketParser implements Parser {
 
 	private final Map<String, RecordSpecification> specsForFiles = new HashMap<String, RecordSpecification>() {
 		{
-			put("nat01.txt", TilskudsblanketRecordSpecs.BLANKET_GRUNDDATA_RECORD_SPEC);
+			put("Blanket.txt", TilskudsblanketRecordSpecs.BLANKET_RECORD_SPEC);
+			put("Blanket ET.txt", TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC);
+			put("Blanket FT.txt", TilskudsblanketRecordSpecs.BLANKET_FORHOJETTILSKUD_RECORD_SPEC);
+			put("Blanket KT.txt", TilskudsblanketRecordSpecs.BLANKET_KRONIKERTILSKUD_RECORD_SPEC);
+			put("Blanket TT.txt", TilskudsblanketRecordSpecs.BLANKET_TERMINALTILSKUD_RECORD_SPEC);
 		}
 	};
 
