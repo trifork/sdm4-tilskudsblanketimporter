@@ -1,3 +1,24 @@
+CREATE TABLE IF NOT EXISTS TilskudForhoejetTakst (
+    TilskudForhoejetTakstPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+    Varenummer VARCHAR(10),
+    Navn VARCHAR(30),
+    Form VARCHAR(30),
+    FormTekst VARCHAR(150),
+    ATCkode VARCHAR(10),
+    Styrke VARCHAR(30),
+    DrugID BIGINT(12),
+    PakningsTekst VARCHAR(30),
+    Udlevering VARCHAR(10),
+    Tilskudstype VARCHAR(10),
+
+    ModifiedDate DATETIME NOT NULL,
+    ValidFrom DATETIME NOT NULL,
+    ValidTo DATETIME,
+
+    INDEX (Varenummer, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
 CREATE TABLE IF NOT EXISTS Tilskudsblanket (
     TilskudsblanketPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 
