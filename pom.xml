@@ -9,13 +9,13 @@
 
 	<artifactId>tilskudsblanketimporter</artifactId>
 	<packaging>war</packaging>
-	<version>4.0-SNAPSHOT</version>
+	<version>4.0</version>
 
     <scm>
         <url>scm:git:git@github.com:trifork/sdm4-tilskudsblanketimporter.git</url>
         <connection>scm:git:git@github.com:trifork/sdm4-tilskudsblanketimporter.git</connection>
         <developerConnection>scm:git:git@github.com:trifork/sdm4-tilskudsblanketimporter.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>tilskudsblanketimporter-4.0</tag>
   </scm>
     <issueManagement>
         <system>JIRA</system>
