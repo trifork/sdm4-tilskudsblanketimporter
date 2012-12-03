@@ -35,53 +35,39 @@ import static dk.nsi.sdm4.core.persistence.recordpersister.FieldSpecification.fi
  */
 public class TilskudsblanketRecordSpecs {
 	
-    public static final RecordSpecification BLANKET_GRUNDDATA_RECORD_SPEC = RecordSpecification.createSpecification("BlanketGrunddata", "drugID", 
-            field("drugID", 11).numerical(),
-            field("varetype", 2),
-            field("varedeltype", 2),
-            field("alfabetSekvensplads", 9),
-            field("specNummer", 5),
-		    field("navn", 30),
-            field("formTekst", 20),
-		    field("formKode", 7),
-		    field("kodeYderligereFormOplysninger", 7),
-            field("styrkeTekst", 20),
-            field("styrkeNumerisk", 10).decimal10_3(),
-            field("styrkeEnhed", 3),
-            field("mtIndehaverKode", 6).numerical(),
-            field("repraesentantDistributoerKode", 6).numerical(),
-            field("atcKode", 8),
-            field("administrationsvejKode", 8),
-            field("trafikadvarsel", 1),
-            field("substitution", 1),
-		    field("blank", 3).ignored(),
-            field("substitutionsgruppe", 4),
-            field("dosisdispensering", 1),
-		    field("blank", 8).ignored(),
-		    field("karantaeneDato", 8));
-    
-    
 	public static final RecordSpecification BLANKET_RECORD_SPEC = RecordSpecification.createSpecification("Tilskudsblanket", "BlanketId", 
-            field("BlanketId", 15).numerical(),
-            field("BlanketTekst", 21000));
+            field("BlanketId", 15, false).numerical(),
+            field("BlanketTekst", 21000, false));
 
 
 	public static final RecordSpecification BLANKET_ENKELTTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketEnkelt", "BlanketId", 
-            field("BlanketId", 15).numerical(),
-            field("Genansoegning", 1).numerical(),
-            field("Navn", 100),
-            field("Form", 100));
+            field("BlanketId", 15, false).numerical(),
+            field("Genansoegning", 1, false).numerical(),
+            field("Navn", 100, true),
+            field("Form", 100, true));
 
 	public static final RecordSpecification BLANKET_FORHOJETTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketForhoejet", "BlanketId", 
-            field("BlanketId", 15).numerical(),
-            field("DrugId", 12).numerical());
+            field("BlanketId", 15, false).numerical(),
+            field("DrugId", 12, false).numerical());
 
 
 	public static final RecordSpecification BLANKET_KRONIKERTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketKroniker", "BlanketId", 
-            field("BlanketId", 15).numerical(),
-            field("Genansoegning", 1).numerical());
+            field("BlanketId", 15, false).numerical(),
+            field("Genansoegning", 1, false).numerical());
 
 	public static final RecordSpecification BLANKET_TERMINALTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketTerminal", "BlanketId", 
-            field("BlanketId", 15).numerical());
-    
+            field("BlanketId", 15, false).numerical());
+
+
+	public static final RecordSpecification FORHOEJETTAKST_RECORD_SPEC = RecordSpecification.createSpecification("TilskudForhoejetTakst", "Varenummer", 
+			field("Varenummer", 10, false).numerical(),
+			field("Navn", 30, false),
+			field("Form", 30, false),
+			field("FormTekst", 150, false),
+			field("ATCkode", 10, false),
+			field("Styrke", 30, false),
+            field("DrugID", 12, false).numerical(),
+			field("PakningsTekst", 30, false),
+			field("Udlevering", 10, false),
+			field("Tilskudstype", 10, false));
 }

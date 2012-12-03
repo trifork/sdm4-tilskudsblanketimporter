@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS TilskudForhoejetTakst (
     TilskudForhoejetTakstPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-
     Varenummer VARCHAR(10),
     Navn VARCHAR(30),
     Form VARCHAR(30),

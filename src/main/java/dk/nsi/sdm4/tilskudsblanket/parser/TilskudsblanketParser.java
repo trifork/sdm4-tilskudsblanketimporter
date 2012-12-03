@@ -26,17 +26,15 @@
  */
 package dk.nsi.sdm4.tilskudsblanket.parser;
 
-import dk.nsi.sdm4.core.parser.Parser;
-import dk.nsi.sdm4.core.parser.ParserException;
-import dk.nsi.sdm4.core.parser.SingleLineRecordParser;
-import dk.nsi.sdm4.core.persistence.recordpersister.Record;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordFetcher;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
-import dk.nsi.sdm4.tilskudsblanket.exception.InvalidTilskudsblanketDatasetException;
-import dk.nsi.sdm4.tilskudsblanket.recordspecs.TilskudsblanketRecordSpecs;
-import dk.sdsd.nsp.slalog.api.SLALogItem;
-import dk.sdsd.nsp.slalog.api.SLALogger;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
@@ -46,13 +44,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
+import dk.nsi.sdm4.core.parser.Parser;
+import dk.nsi.sdm4.core.parser.ParserException;
+import dk.nsi.sdm4.core.persistence.recordpersister.Record;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordFetcher;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
+import dk.nsi.sdm4.tilskudsblanket.exception.InvalidTilskudsblanketDatasetException;
+import dk.nsi.sdm4.tilskudsblanket.recordspecs.TilskudsblanketRecordSpecs;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
 /**
- * Hoved-klasse i vitaminimporter-modulet. Ansvarlig for at koordinere importen af et datasæt af filer.
+ * Hoved-klasse i tilskudsblanketimporter-modulet. Ansvarlig for at koordinere importen af et datasæt af filer.
  * Antager at process-modetoden kaldes af ParserExecutor med et validt dataset
 */
 public class TilskudsblanketParser implements Parser {
@@ -72,11 +76,12 @@ public class TilskudsblanketParser implements Parser {
 
 	private final Map<String, RecordSpecification> specsForFiles = new HashMap<String, RecordSpecification>() {
 		{
+			put("FT takster.txt", TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC);
 			put("Blanket.txt", TilskudsblanketRecordSpecs.BLANKET_RECORD_SPEC);
-			put("Blanket ET.txt", TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC);
-			put("Blanket FT.txt", TilskudsblanketRecordSpecs.BLANKET_FORHOJETTILSKUD_RECORD_SPEC);
-			put("Blanket KT.txt", TilskudsblanketRecordSpecs.BLANKET_KRONIKERTILSKUD_RECORD_SPEC);
-			put("Blanket TT.txt", TilskudsblanketRecordSpecs.BLANKET_TERMINALTILSKUD_RECORD_SPEC);
+			put("Blanketmap ET.txt", TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC);
+			put("Blanketmap FT.txt", TilskudsblanketRecordSpecs.BLANKET_FORHOJETTILSKUD_RECORD_SPEC);
+			put("Blanketmap KT.txt", TilskudsblanketRecordSpecs.BLANKET_KRONIKERTILSKUD_RECORD_SPEC);
+			put("Blanketmap TT.txt", TilskudsblanketRecordSpecs.BLANKET_TERMINALTILSKUD_RECORD_SPEC);
 		}
 	};
 
@@ -92,7 +97,7 @@ public class TilskudsblanketParser implements Parser {
 	public void process(File datadir) throws ParserException {
 		SLALogItem slaLogItem = slaLogger.createLogItem("TilskudsblanketParser", "All");
 
-		//validateDataset(datadir);
+		validateDataset(datadir);
 
 		try {
 			assert datadir.listFiles() != null;
@@ -102,8 +107,6 @@ public class TilskudsblanketParser implements Parser {
 					//processSingleFile(file, spec);
 				} else {
 					// hvis vi ikke har nogen spec, skal filen ikke processeres.
-					// Filen kan fx være en slet01.txt fil som er med i de zippede udtræk fra LMS, så det er en forventet situation og skal debug-logges
-					// Andre filer tyder på at noget er galt og skal warn-logges
 					log.log(levelForUnexpectedFile(file), "Ignoring file " + file.getAbsolutePath());
 				}
 			}
@@ -121,12 +124,7 @@ public class TilskudsblanketParser implements Parser {
 
 	// kun ikke-private for at tillade test, kaldes ikke udefra
 	Level levelForUnexpectedFile(File file) {
-		Level logLevel;
-		if (file.getName().matches("slet\\d*.txt")) {
-			logLevel = Level.DEBUG;
-		} else {
-			logLevel = Level.WARN;
-		}
+		Level logLevel = Level.WARN;
 		return logLevel;
 	}
 
@@ -175,22 +173,22 @@ public class TilskudsblanketParser implements Parser {
 	}
 
 	private Set<Long> parseAndPersistFile(File file, RecordSpecification spec) {
-		SingleLineRecordParser grunddataParser = new SingleLineRecordParser(spec);
-		Set<Long> drugidsFromFile = new HashSet<Long>();
+		DelimitedLineRecordParser recordParser = new DelimitedLineRecordParser(spec, ";");
+		Set<Long> idsFromFile = new HashSet<Long>();
 
 		List<String> lines = readFile(file);// files are very small, it's okay to hold them in memory
-		if (log.isDebugEnabled()) log.debug("Read " + lines.size() + " lines from file " + file.getAbsolutePath());
+		if (log.isDebugEnabled()) {log.debug("Read " + lines.size() + " lines from file " + file.getAbsolutePath());}
 
 		for (String line : lines) {
 			if (log.isDebugEnabled()) log.debug("Processing line " + line);
-			Record record = grunddataParser.parseLine(line);
+			Record record = recordParser.parseLine(line);
 			if (log.isDebugEnabled()) log.debug("Parsed line to record " + record);
 
-			drugidsFromFile.add((Long) record.get(spec.getKeyColumn()));
+			idsFromFile.add((Long) record.get(spec.getKeyColumn()));
 			persistRecordIfNeeeded(spec, record);
 		}
 
-		return drugidsFromFile;
+		return idsFromFile;
 	}
 
 	private List<String> readFile(File file) {
