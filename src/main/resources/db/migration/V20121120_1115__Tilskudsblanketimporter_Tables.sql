@@ -83,16 +83,3 @@ CREATE TABLE IF NOT EXISTS TilskudsblanketEnkelt (
 
     INDEX (BlanketId, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
-
-CREATE TABLE IF NOT EXISTS TilskudsblanketForhoejet (
-    TilskudsblanketForhoejetPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-
-    BlanketId BIGINT(15),
-    DrugId BIGINT(12),
-
-    ModifiedDate DATETIME NOT NULL,
-    ValidFrom DATETIME NOT NULL,
-    ValidTo DATETIME,
-
-    INDEX (BlanketId, ValidTo, ValidFrom)
-) ENGINE=InnoDB COLLATE=utf8_bin;

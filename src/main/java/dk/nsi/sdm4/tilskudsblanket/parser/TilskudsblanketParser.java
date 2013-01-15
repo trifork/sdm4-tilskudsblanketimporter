@@ -104,7 +104,7 @@ public class TilskudsblanketParser implements Parser {
 			for (File file : datadir.listFiles()) {
 				RecordSpecification spec = specsForFiles.get(file.getName());
 				if (spec != null) {
-					//processSingleFile(file, spec);
+					processSingleFile(file, spec);
 				} else {
 					// hvis vi ikke har nogen spec, skal filen ikke processeres.
 					log.log(levelForUnexpectedFile(file), "Ignoring file " + file.getAbsolutePath());
