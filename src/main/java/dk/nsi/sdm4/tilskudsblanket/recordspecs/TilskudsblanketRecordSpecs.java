@@ -35,39 +35,52 @@ import static dk.nsi.sdm4.core.persistence.recordpersister.FieldSpecification.fi
  */
 public class TilskudsblanketRecordSpecs {
 	
-	public static final RecordSpecification BLANKET_RECORD_SPEC = RecordSpecification.createSpecification("Tilskudsblanket", "BlanketId", 
-            field("BlanketId", 15, false).numerical(),
-            field("BlanketTekst", 21000, false));
+	public static final RecordSpecification BLANKET_RECORD_SPEC =
+            RecordSpecification.createSpecification("Tilskudsblanket", "BlanketId",
+                    field("BlanketId", 15, false).numerical(),
+                    field("BlanketTekst", 21000, false));
 
+    // Id is not present in input it should be a key created from
+    // Genansoegning, Navn and Form
+	public static final RecordSpecification BLANKET_ENKELTTILSKUD_RECORD_SPEC =
+            RecordSpecification.createSpecification("TilskudsblanketEnkelt", "Id",
+                    field("BlanketId", 15, false).numerical(),
+                    field("Genansoegning", 1, false).numerical(),
+                    field("Navn", 100, true),
+                    field("Form", 100, true),
+                    field("Id", 32, true));
 
-	public static final RecordSpecification BLANKET_ENKELTTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketEnkelt", "BlanketId", 
-            field("BlanketId", 15, false).numerical(),
-            field("Genansoegning", 1, false).numerical(),
-            field("Navn", 100, true),
-            field("Form", 100, true));
+    // DrugId is used as key because we should have a blanketId for each drugId
+    // not the other way around.
+	public static final RecordSpecification BLANKET_FORHOJETTILSKUD_RECORD_SPEC =
+            RecordSpecification.createSpecification("TilskudsblanketForhoejet", "DrugId",
+                    field("BlanketId", 15, false).numerical(),
+                    field("DrugId", 12, true).numerical());
 
-	public static final RecordSpecification BLANKET_FORHOJETTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketForhoejet", "BlanketId", 
-            field("BlanketId", 15, false).numerical(),
-            field("DrugId", 12, false).numerical());
+    // Genansogning is used as key even though it is an boolean
+    // this is simply because we only have one blanket for each case
+	public static final RecordSpecification BLANKET_KRONIKERTILSKUD_RECORD_SPEC =
+            RecordSpecification.createSpecification("TilskudsblanketKroniker", "Genansoegning",
+                    field("BlanketId", 15, false).numerical(),
+                    field("Genansoegning", 1, false).numerical());
 
+    // There is never more than one of these records, so we dont really have an Id
+    // thats why we add an id column, it should always contain the same id
+	public static final RecordSpecification BLANKET_TERMINALTILSKUD_RECORD_SPEC =
+            RecordSpecification.createSpecification("TilskudsblanketTerminal", "Id",
+                    field("BlanketId", 15, false).numerical(),
+                    field("Id", 1, false).numerical());
 
-	public static final RecordSpecification BLANKET_KRONIKERTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketKroniker", "BlanketId", 
-            field("BlanketId", 15, false).numerical(),
-            field("Genansoegning", 1, false).numerical());
-
-	public static final RecordSpecification BLANKET_TERMINALTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketTerminal", "BlanketId", 
-            field("BlanketId", 15, false).numerical());
-
-
-	public static final RecordSpecification FORHOEJETTAKST_RECORD_SPEC = RecordSpecification.createSpecification("TilskudForhoejetTakst", "Varenummer", 
-			field("Varenummer", 10, false).numerical(),
-			field("Navn", 30, false),
-			field("Form", 30, false),
-			field("FormTekst", 150, false),
-			field("ATCkode", 10, false),
-			field("Styrke", 30, false),
-            field("DrugID", 12, false).numerical(),
-			field("PakningsTekst", 30, false),
-			field("Udlevering", 10, false),
-			field("Tilskudstype", 10, false));
+	public static final RecordSpecification FORHOEJETTAKST_RECORD_SPEC =
+            RecordSpecification.createSpecification("TilskudForhoejetTakst", "Varenummer",
+                    field("Varenummer", 10, false).numerical(),
+                    field("Navn", 30, false),
+                    field("Form", 30, false),
+                    field("FormTekst", 150, true),
+                    field("ATCkode", 10, false),
+                    field("Styrke", 30, true),
+                    field("DrugID", 12, false).numerical(),
+                    field("PakningsTekst", 30, false),
+                    field("Udlevering", 10, false),
+                    field("Tilskudstype", 10, false));
 }

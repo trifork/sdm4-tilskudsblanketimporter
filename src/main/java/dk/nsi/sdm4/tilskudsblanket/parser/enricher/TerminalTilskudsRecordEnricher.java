@@ -24,22 +24,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.sdm4.tilskudsblanket.config;
+package dk.nsi.sdm4.tilskudsblanket.parser.enricher;
 
-import dk.nsi.sdm4.core.parser.Parser;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordFetcher;
-import dk.nsi.sdm4.tilskudsblanket.parser.TilskudsblanketParser;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordBuilder;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-/**
- * Spring-konfiguration der ikke forventes at ændre sig mellem miljøer (fx test/produktion)
- */
-@Configuration
-public class TilskudsblanketimporterApplicationConfig {
-	@Bean
-	public Parser parser() {
-		return new TilskudsblanketParser();
-	}
+public class TerminalTilskudsRecordEnricher implements RecordEnricher {
+    @Override
+    public RecordBuilder enrichRecord(String[] parsedRecord, RecordBuilder builder) {
+        // There is only one valid record in Terminal tilskud so always set an Id to 1
+        // this way the standard stamdata handling works.
+        builder.field("Id",1l);
+        return builder;
+    }
 }

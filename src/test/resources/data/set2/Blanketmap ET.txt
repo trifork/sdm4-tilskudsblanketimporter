@@ -1,0 +1,51 @@
+114022;0;Ritalin;tabletter
+124810;0;Cytotec;tabletter
+124810;0;Antepsin;mikstur
+124810;0;Nizax;injektionsv�ske
+124810;0;Zantac;infusionskoncentrat
+124810;0;Nizax;kapsler
+124810;0;Kuracid;tabletter
+124810;0;Novamet;brusetabletter
+124810;0;Cimecodan;tabletter
+124810;0;Hexagastron;tabletter
+124810;0;Acinil;filmovertrukne tabletter
+124808;0;Levonova;intrauterint indl�g
+124810;0;Antepsin;tabletter
+124810;0;Ranitidin "Ratiopharm";filmovertrukne tabletter
+114022;0;Equasym;tabletter
+124810;0;Zantac;filmovertrukne tabletter
+124810;0;Nizatidin "Actavis";kapsler, h�rde
+124810;0;Pantoloc;enterotabletter
+124810;0;Lanzo;enterokapsler
+124810;0;Inexium;enterotabletter
+124810;0;Nexium;pulver til injektions- og infusionsv�ske, opl�sning
+124810;0;Lansoprazol "Stada";enterokapsler, h�rde
+124810;0;Omeprazol "Recept";enterokapsler, h�rde
+114022;0;Ritalin Uno;kapsler med modificeret udl�sning, h�rde
+124810;0;Lansoprazol "ratiopharm";enterokapsler, h�rde
+124810;0;INexium;enterotabletter
+124810;0;Omeprazol "Ratiopharm";enterokapsler, h�rde
+124810;0;Pariet;enterotabletter
+124810;0;Gaviscon;oral suspension
+124810;0;Lansoprazol "Merck NM";enterokapsler, h�rde
+124810;0;Omeprazol "BMM Pharma";enterotabletter
+124810;0;Ranitidin "Sandoz";brusetabletter
+124810;0;Lansoprazol "Alternova";enterokapsler, h�rde
+124810;0;Lansoprazol "KRKA";enterokapsler, h�rde
+124810;0;Lansoprazol "HEXAL";enterokapsler, h�rde
+124810;0;Zantac;brusetabletter
+124810;0;Losec;enterotabletter
+114022;0;Motiron;tabletter
+124810;0;Cimetidin "1A Farma";filmovertrukne tabletter
+124810;0;Gaviscon;tyggetabletter
+124810;0;Pantoloc;pulver til injektionsv�ske, opl�sning
+124810;0;Losec;pulver til infusionsv�ske, opl�sning
+124810;0;Ranicodan;filmovertrukne tabletter
+124810;0;Ranitidin "1A Farma";filmovertrukne tabletter
+124810;0;Izatax;kapsler, h�rde
+124810;0;Losec;pulver og solvens til injektionsv�ske, opl�sning
+124810;0;Nexium;enterotabletter
+124810;0;Lansoprazol "Actavis";enterokapsler, h�rde
+124810;0;Omelix;enterokapsler, h�rde
+124808;0;Mirena;intrauterint indl�g
+113980;0;<null>;<null>

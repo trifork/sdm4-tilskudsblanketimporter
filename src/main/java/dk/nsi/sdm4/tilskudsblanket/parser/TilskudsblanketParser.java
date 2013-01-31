@@ -29,14 +29,14 @@ package dk.nsi.sdm4.tilskudsblanket.parser;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import dk.nsi.sdm4.core.persistence.recordpersister.*;
+import dk.nsi.sdm4.tilskudsblanket.parser.enricher.EnkeltTilskudsRecordEnricher;
+import dk.nsi.sdm4.tilskudsblanket.parser.enricher.RecordEnricher;
+import dk.nsi.sdm4.tilskudsblanket.parser.enricher.TerminalTilskudsRecordEnricher;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +46,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
-import dk.nsi.sdm4.core.persistence.recordpersister.Record;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordFetcher;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
 import dk.nsi.sdm4.tilskudsblanket.exception.InvalidTilskudsblanketDatasetException;
 import dk.nsi.sdm4.tilskudsblanket.recordspecs.TilskudsblanketRecordSpecs;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
@@ -68,11 +64,11 @@ public class TilskudsblanketParser implements Parser {
 	@Autowired
 	private RecordPersister persister;
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private RecordFetcher fetcher;
 
 	@Autowired
-	private RecordFetcher fetcher;
+	private JdbcTemplate jdbcTemplate;
 
 	private final Map<String, RecordSpecification> specsForFiles = new HashMap<String, RecordSpecification>() {
 		{
@@ -84,8 +80,14 @@ public class TilskudsblanketParser implements Parser {
 			put("Blanketmap TT.txt", TilskudsblanketRecordSpecs.BLANKET_TERMINALTILSKUD_RECORD_SPEC);
 		}
 	};
+    private final Map<String, RecordEnricher> enrichersForFiles = new HashMap<String, RecordEnricher>() {
+        {
+            put("Blanketmap ET.txt", new EnkeltTilskudsRecordEnricher());
+            put("Blanketmap TT.txt", new TerminalTilskudsRecordEnricher());
+        }
+    };
 
-	private static final String FILE_ENCODING = "CP865";
+	private static final String FILE_ENCODING = "ISO-8859-1";
 
 	/**
 	 * Ansvarlig for at håndtere import af et tilskudsblanket-datasæt.
@@ -102,9 +104,11 @@ public class TilskudsblanketParser implements Parser {
 		try {
 			assert datadir.listFiles() != null;
 			for (File file : datadir.listFiles()) {
-				RecordSpecification spec = specsForFiles.get(file.getName());
+                String filename = file.getName();
+                RecordSpecification spec = specsForFiles.get(filename);
 				if (spec != null) {
-					processSingleFile(file, spec);
+                    RecordEnricher enricher = enrichersForFiles.get(filename);
+					processSingleFile(file, spec, enricher);
 				} else {
 					// hvis vi ikke har nogen spec, skal filen ikke processeres.
 					log.log(levelForUnexpectedFile(file), "Ignoring file " + file.getAbsolutePath());
@@ -143,7 +147,6 @@ public class TilskudsblanketParser implements Parser {
 		for (File actualFile : actualFiles) {
 			actualFilenames.add(actualFile.getName());
 		}
-
 		requiredFileNames.removeAll(actualFilenames);
 
 		if (!requiredFileNames.isEmpty()) {
@@ -152,14 +155,14 @@ public class TilskudsblanketParser implements Parser {
 	}
 
 	// kun ikke-private for at tillade test, kaldes ikke udefra
-	void processSingleFile(File file, RecordSpecification spec) {
+	void processSingleFile(File file, RecordSpecification spec, RecordEnricher enricher) {
 		if (log.isDebugEnabled()) {
 			log.debug("Processing file " + file + " with spec " + spec.getClass().getSimpleName());
 		}
 		SLALogItem slaLogItem = slaLogger.createLogItem("TilskudsblanketParser importer of file", file.getName());
 
 		try {
-			Set<Long> drugidsFromFile = parseAndPersistFile(file, spec);
+			Set<Object> drugidsFromFile = parseAndPersistFile(file, spec, enricher);
 			invalidateRecordsRemovedFromFile(drugidsFromFile, spec);
 		} catch (RuntimeException e) {
 			slaLogItem.setCallResultError("TilskudsblanketParser failed - Cause: " + e.getMessage());
@@ -172,9 +175,16 @@ public class TilskudsblanketParser implements Parser {
 		slaLogItem.store();
 	}
 
-	private Set<Long> parseAndPersistFile(File file, RecordSpecification spec) {
-		DelimitedLineRecordParser recordParser = new DelimitedLineRecordParser(spec, ";");
-		Set<Long> idsFromFile = new HashSet<Long>();
+    /**
+     * Parse and persist a file
+     * @param file
+     * @param spec
+     * @param enricher
+     * @return a set of object containing id's of records processed
+     */
+	private Set<Object> parseAndPersistFile(File file, RecordSpecification spec, RecordEnricher enricher) {
+		DelimitedLineRecordParser recordParser = new DelimitedLineRecordParser(spec, ";", enricher);
+		Set<Object> idsFromFile = new HashSet<Object>();
 
 		List<String> lines = readFile(file);// files are very small, it's okay to hold them in memory
 		if (log.isDebugEnabled()) {log.debug("Read " + lines.size() + " lines from file " + file.getAbsolutePath());}
@@ -184,14 +194,19 @@ public class TilskudsblanketParser implements Parser {
 			Record record = recordParser.parseLine(line);
 			if (log.isDebugEnabled()) log.debug("Parsed line to record " + record);
 
-			idsFromFile.add((Long) record.get(spec.getKeyColumn()));
+			idsFromFile.add(record.get(spec.getKeyColumn()));
 			persistRecordIfNeeeded(spec, record);
 		}
 
 		return idsFromFile;
 	}
 
-	private List<String> readFile(File file) {
+    /**
+     * Read all lines from a file into a list
+     * @param file
+     * @return
+     */
+    private List<String> readFile(File file) {
 		try {
 			return FileUtils.readLines(file, FILE_ENCODING);
 		} catch (IOException e) {
@@ -199,16 +214,23 @@ public class TilskudsblanketParser implements Parser {
 		}
 	}
 
+    /**
+     * Persist a new record, if the record already exist and equals it is ignored.
+     * @param spec
+     * @param record
+     */
 	private void persistRecordIfNeeeded(RecordSpecification spec, Record record) {
 		Record existingRecord = findRecordWithSameKey(record, spec);
 		if (existingRecord != null) {
-			if (existingRecord.equals(record)) {
+            if (RecordCompareHelper.recordsEqualsFactoringInOptionals(spec, existingRecord, record)) {
 				// no need to do anything
 				if (log.isDebugEnabled()) log.debug("Ignoring record " + record + " for spec " + spec.getTable() + " as we have identical record in db");
 			} else {
 				if (log.isDebugEnabled()) log.debug("Setting validTo on database record " + existingRecord + " for spec " + spec.getTable() + " before insertion of new record " + record);
-				jdbcTemplate.update("UPDATE " + spec.getTable() + " set ValidTo = ? WHERE " + spec.getKeyColumn() + " = ? AND ValidTo IS NULL",
-						persister.getTransactionTime().toDateTime().toDate(),
+                Date modifiedDate = persister.getTransactionTime().toDateTime().toDate();
+                jdbcTemplate.update("UPDATE " + spec.getTable() + " SET ValidTo = ?, ModifiedDate = ? WHERE " + spec.getKeyColumn() + " = ? AND ValidTo IS NULL",
+                        modifiedDate,
+                        modifiedDate,
 						existingRecord.get(spec.getKeyColumn()));
 				persist(record, spec);
 			}
@@ -218,6 +240,12 @@ public class TilskudsblanketParser implements Parser {
 		}
 	}
 
+    /**
+     * Tries to find a valid record in the database with same identifier as the record passed to the function
+     * @param record
+     * @param spec
+     * @return the found record or null if it was not found
+     */
 	private Record findRecordWithSameKey(Record record, RecordSpecification spec) {
 		try {
 			return fetcher.fetchCurrent(record.get(spec.getKeyColumn())+"", spec);
@@ -226,6 +254,11 @@ public class TilskudsblanketParser implements Parser {
 		}
 	}
 
+    /**
+     * Persist a record to database
+     * @param record
+     * @param spec
+     */
 	private void persist(Record record, RecordSpecification spec) {
 		try {
 			persister.persist(record, spec);
@@ -234,17 +267,52 @@ public class TilskudsblanketParser implements Parser {
 		}
 	}
 
-	private void invalidateRecordsRemovedFromFile(Set<Long> idsFromFile, RecordSpecification spec) {
+	private void invalidateRecordsRemovedFromFile(Set<Object> idsFromFile, RecordSpecification spec) {
 		// we'll compute the list of ids of record to be invalidated by fetching all the ids from the database, then weeding out all the ids that exist in the input file - these shouldn't be removed
-		Set<Long> idsToBeInvalidated = new HashSet<Long>(jdbcTemplate.queryForList("SELECT " + spec.getKeyColumn() + " from " + spec.getTable() + " WHERE ValidTo IS NULL", Long.class));
+
+        List<Object> idsOfAllRecords = fetchAllIdsFrom(spec);
+        Set<Object> idsToBeInvalidated = new HashSet<Object>(idsOfAllRecords);
 		idsToBeInvalidated.removeAll(idsFromFile);
 
 		if (!idsToBeInvalidated.isEmpty()) {
-			jdbcTemplate.update("UPDATE " + spec.getTable() + " SET ValidTo = ? WHERE " + spec.getKeyColumn() + " IN (" + StringUtils.join(idsToBeInvalidated, ',')  + ") AND ValidTo IS NULL", persister.getTransactionTime().toDateTime().toDate());
+            Date modifiedDate = persister.getTransactionTime().toDateTime().toDate();
+            for (Object currentId : idsToBeInvalidated) {
+                String sql = "UPDATE " + spec.getTable() + " SET ValidTo = ?, ModifiedDate = ? WHERE " +
+                        spec.getKeyColumn() + "=? AND ValidTo IS NULL";
+                jdbcTemplate.update(sql, modifiedDate, modifiedDate, currentId);
+            }
 		}
 	}
 
-	/**
+    /**
+     * Get a list containing all id's in a given table.
+     * @param spec
+     * @return
+     */
+    private List<Object> fetchAllIdsFrom(RecordSpecification spec) {
+        FieldSpecification.RecordFieldType idType = null;
+        for (FieldSpecification field : spec.getFieldSpecs()) {
+            if (field.name.equals(spec.getKeyColumn())) {
+                idType = field.type;
+                break;
+            }
+        }
+        assert idType != null;
+        if (idType == FieldSpecification.RecordFieldType.ALPHANUMERICAL) {
+            List<String> stringIds = jdbcTemplate.queryForList("SELECT " + spec.getKeyColumn() + " from " + spec.getTable() +
+                    " WHERE ValidTo IS NULL", String.class);
+            return new LinkedList<Object>(stringIds);
+        } else if (idType == FieldSpecification.RecordFieldType.NUMERICAL) {
+            List<Long> longIds = jdbcTemplate.queryForList("SELECT " + spec.getKeyColumn() + " from " + spec.getTable() +
+                    " WHERE ValidTo IS NULL", Long.class);
+            return new LinkedList<Object>(longIds);
+        } else {
+            throw new NotImplementedException("Only alphanumeric and numerical indexes implemented");
+        }
+    }
+
+
+    /**
 	 * @see dk.nsi.sdm4.core.parser.Parser#getHome()
 	 */
 	@Override

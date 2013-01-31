@@ -24,22 +24,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.sdm4.tilskudsblanket.config;
+package dk.nsi.sdm4.tilskudsblanket.parser.enricher;
 
-import dk.nsi.sdm4.core.parser.Parser;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordFetcher;
-import dk.nsi.sdm4.tilskudsblanket.parser.TilskudsblanketParser;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordBuilder;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+public interface RecordEnricher {
 
-/**
- * Spring-konfiguration der ikke forventes at ændre sig mellem miljøer (fx test/produktion)
- */
-@Configuration
-public class TilskudsblanketimporterApplicationConfig {
-	@Bean
-	public Parser parser() {
-		return new TilskudsblanketParser();
-	}
+    /**
+     * Post process a record after it has been read into an array, but before it has been build.
+     * This can be useful for fields that should be generated on import.
+     * @param parsedRecord
+     * @param builder
+     * @return
+     */
+    public abstract RecordBuilder enrichRecord(String[] parsedRecord, RecordBuilder builder);
 }

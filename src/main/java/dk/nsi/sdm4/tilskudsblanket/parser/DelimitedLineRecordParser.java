@@ -30,60 +30,39 @@ import static dk.nsi.sdm4.core.persistence.recordpersister.FieldSpecification.Re
 import static dk.nsi.sdm4.core.persistence.recordpersister.FieldSpecification.RecordFieldType.DECIMAL10_3;
 import static dk.nsi.sdm4.core.persistence.recordpersister.FieldSpecification.RecordFieldType.NUMERICAL;
 
+import dk.nsi.sdm4.core.persistence.recordpersister.Record;
+import dk.nsi.sdm4.tilskudsblanket.parser.enricher.RecordEnricher;
 import org.apache.commons.lang.StringUtils;
 
 import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.core.persistence.recordpersister.FieldSpecification;
-import dk.nsi.sdm4.core.persistence.recordpersister.Record;
 import dk.nsi.sdm4.core.persistence.recordpersister.RecordBuilder;
 import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
 
 public class DelimitedLineRecordParser {
+
+    private static String NULL_INDICATOR = "<null>";
+
     private final RecordSpecification recordSpecification;
     private final String delimiter;
+    private final RecordEnricher recordEnricher;
 
-    public DelimitedLineRecordParser(RecordSpecification recordSpecification, String delimiter) {
+    public DelimitedLineRecordParser(RecordSpecification recordSpecification,
+                                     String delimiter, RecordEnricher recordEnricher) {
         this.recordSpecification = recordSpecification;
         this.delimiter = delimiter;
+        this.recordEnricher = recordEnricher;
     }
 
     public Record parseLine(String line) {
-
         RecordBuilder builder = new RecordBuilder(recordSpecification);
 
         try {
-            int offset = 0;
             String[] values = line.split(delimiter);
 
-            for (FieldSpecification fieldSpecification : recordSpecification.getFieldSpecs()) {
-            	
-    	        if (!fieldSpecification.ignored) {
-    	            String subString;
-    	        	try {
-						subString = values[offset];
-    	        	} catch(ArrayIndexOutOfBoundsException e) {
-    	        		// TODO: better errorhandling if this actually is an error (e.g line is to short...)
-    	        		break;
-    	        	}
-
-    		        String trimmedValue = subString.trim();
-    		        if (fieldSpecification.type == ALPHANUMERICAL) {
-    	                builder.field(fieldSpecification.name, trimmedValue);
-    		        } else if (fieldSpecification.type == DECIMAL10_3) {
-    			        if (StringUtils.isEmpty(trimmedValue)) {
-    				        throw new ParserException("Field " + fieldSpecification.name + " at offset " + offset + " in line " + line  + " has value '" + subString + "' which is not allowed for numerical fields");
-    			        }
-    			        builder.field(fieldSpecification.name, Double.parseDouble(trimmedValue));
-    		        } else if (fieldSpecification.type == NUMERICAL) {
-    			        if (StringUtils.isEmpty(trimmedValue) || !StringUtils.isNumeric(trimmedValue)) {
-    				        throw new ParserException("Field " + fieldSpecification.name + " at offset " + offset + " in line " + line  + " has value '" + subString + "' which is not allowed for numerical fields");
-    			        }
-    	                builder.field(fieldSpecification.name, Long.parseLong(trimmedValue));
-    	            } else {
-    	                throw new AssertionError("Should match exactly one of the types alphanumerical or numerical.");
-    	            }
-    	        }
-                offset++;
+            builder = parseAsArray(values, line, builder);
+            if (recordEnricher != null) {
+                builder = recordEnricher.enrichRecord(values, builder);
             }
         } catch(Exception e) {
         	if(e instanceof ParserException) {
@@ -95,4 +74,42 @@ public class DelimitedLineRecordParser {
 
         return builder.build();
     }
+
+    private RecordBuilder parseAsArray(String[] values, String line, RecordBuilder builder) {
+        int offset = 0;
+        for (FieldSpecification fieldSpecification : recordSpecification.getFieldSpecs()) {
+            if (!fieldSpecification.ignored) {
+                String subString;
+                try {
+                    subString = values[offset];
+                } catch(ArrayIndexOutOfBoundsException e) {
+                    // TODO: better errorhandling if this actually is an error (e.g line is to short...)
+                    break;
+                }
+                String trimmedValue = subString.trim();
+                if (!trimmedValue.equals(NULL_INDICATOR)) {
+                    if (fieldSpecification.type == ALPHANUMERICAL) {
+                        builder.field(fieldSpecification.name, trimmedValue);
+                    } else if (fieldSpecification.type == DECIMAL10_3) {
+                        if (StringUtils.isEmpty(trimmedValue)) {
+                            throw new ParserException("Field " + fieldSpecification.name + " at offset " + offset +
+                                    " in line " + line  + " has value '" + subString + "' which is not allowed for numerical fields");
+                        }
+                        builder.field(fieldSpecification.name, Double.parseDouble(trimmedValue));
+                    } else if (fieldSpecification.type == NUMERICAL) {
+                        if (StringUtils.isEmpty(trimmedValue) || !StringUtils.isNumeric(trimmedValue)) {
+                            throw new ParserException("Field " + fieldSpecification.name + " at offset " + offset +
+                                    " in line " + line  + " has value '" + subString + "' which is not allowed for numerical fields");
+                        }
+                        builder.field(fieldSpecification.name, Long.parseLong(trimmedValue));
+                    } else {
+                        throw new AssertionError("Should match exactly one of the types alphanumerical or numerical.");
+                    }
+                }
+            }
+            offset++;
+        }
+        return builder;
+    }
+
 }

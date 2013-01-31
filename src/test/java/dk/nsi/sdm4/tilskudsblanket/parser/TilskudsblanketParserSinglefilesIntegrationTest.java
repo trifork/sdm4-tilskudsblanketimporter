@@ -29,6 +29,9 @@ package dk.nsi.sdm4.tilskudsblanket.parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import dk.nsi.sdm4.tilskudsblanket.parser.enricher.EnkeltTilskudsRecordEnricher;
+import dk.nsi.sdm4.tilskudsblanket.parser.enricher.RecordEnricher;
+import dk.nsi.sdm4.tilskudsblanket.parser.enricher.TerminalTilskudsRecordEnricher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,56 +67,59 @@ public class TilskudsblanketParserSinglefilesIntegrationTest
 
 	@Test
 	public void persistsOptionalData() throws Exception {
-	    importFile("optionalDataTest/Blanketmap ET.txt", TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC);
+	    importFile("optionalDataTest/Blanketmap ET.txt", TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC,
+                new EnkeltTilskudsRecordEnricher());
 
 		assertEquals(2, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketEnkelt"));
-		assertNull(jdbcTemplate.queryForObject("SELECT Navn FROM TilskudsblanketEnkelt where blanketid = 9699940", String.class));  
+		assertNull(jdbcTemplate.queryForObject(
+                "SELECT Navn FROM TilskudsblanketEnkelt WHERE blanketid = 9699940 AND ValidTo IS NULL", String.class));
 	}
 
 	@Test
 	public void persistsEnkeltBlanketter() throws Exception {
-	    importFile("data/Blanketmap ET.txt", TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC);
+	    importFile("data/set1/Blanketmap ET.txt", TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC,
+                new EnkeltTilskudsRecordEnricher());
 
-		assertEquals(197, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketEnkelt"));
+		assertEquals(197, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketEnkelt WHERE ValidTo IS NULL"));
 	}
 
 	@Test
 	public void persistsForhoejetBlanketter() throws Exception {
-	    importFile("data/Blanketmap FT.txt", TilskudsblanketRecordSpecs.BLANKET_FORHOJETTILSKUD_RECORD_SPEC);
+	    importFile("data/set1/Blanketmap FT.txt", TilskudsblanketRecordSpecs.BLANKET_FORHOJETTILSKUD_RECORD_SPEC, null);
 
-		assertEquals(1, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketForhoejet"));
+		assertEquals(1, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketForhoejet WHERE ValidTo IS NULL"));
 	}
 
 	@Test
 	public void persistsKronikerBlanketter() throws Exception {
-	    importFile("data/Blanketmap KT.txt", TilskudsblanketRecordSpecs.BLANKET_KRONIKERTILSKUD_RECORD_SPEC);
+	    importFile("data/set1/Blanketmap KT.txt", TilskudsblanketRecordSpecs.BLANKET_KRONIKERTILSKUD_RECORD_SPEC, null);
 
-		assertEquals(2, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketKroniker"));
+		assertEquals(2, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketKroniker WHERE ValidTo IS NULL"));
 	}
 
 	@Test
 	public void persistsTerminalBlanketter() throws Exception {
-	    importFile("data/Blanketmap TT.txt", TilskudsblanketRecordSpecs.BLANKET_TERMINALTILSKUD_RECORD_SPEC);
+	    importFile("data/set1/Blanketmap TT.txt", TilskudsblanketRecordSpecs.BLANKET_TERMINALTILSKUD_RECORD_SPEC,
+                new TerminalTilskudsRecordEnricher());
 
-		assertEquals(1, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketTerminal"));
+		assertEquals(1, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketTerminal WHERE ValidTo IS NULL"));
 	}
 
 	@Test
 	public void persistsBlanketter() throws Exception {
-	    importFile("data/Blanket.txt", TilskudsblanketRecordSpecs.BLANKET_RECORD_SPEC);
+	    importFile("data/set1/Blanket.txt", TilskudsblanketRecordSpecs.BLANKET_RECORD_SPEC, null);
 
-		assertEquals(36, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM Tilskudsblanket"));
+		assertEquals(36, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM Tilskudsblanket WHERE ValidTo IS NULL"));
 	}
 
 	@Test
 	public void persistsForhoejetTakst() throws Exception {
-	    importFile("data/FT Takster.txt", TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC);
-
-		assertEquals(3550, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudForhoejetTakst"));
+	    importFile("data/set1/FT Takster.txt", TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC, null);
+		assertEquals(3550, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudForhoejetTakst WHERE ValidTo IS NULL"));
 	}
 
-	private void importFile(String filePath, RecordSpecification spec) throws Exception {
-		parser.processSingleFile(new ClassPathResource(filePath).getFile(), spec);
+	private void importFile(String filePath, RecordSpecification spec, RecordEnricher enricher) throws Exception {
+		parser.processSingleFile(new ClassPathResource(filePath).getFile(), spec, enricher);
 	}
 
 }
