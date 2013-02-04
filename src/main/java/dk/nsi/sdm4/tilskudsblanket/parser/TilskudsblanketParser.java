@@ -227,11 +227,7 @@ public class TilskudsblanketParser implements Parser {
 				if (log.isDebugEnabled()) log.debug("Ignoring record " + record + " for spec " + spec.getTable() + " as we have identical record in db");
 			} else {
 				if (log.isDebugEnabled()) log.debug("Setting validTo on database record " + existingRecord + " for spec " + spec.getTable() + " before insertion of new record " + record);
-                Date modifiedDate = persister.getTransactionTime().toDateTime().toDate();
-                jdbcTemplate.update("UPDATE " + spec.getTable() + " SET ValidTo = ?, ModifiedDate = ? WHERE " + spec.getKeyColumn() + " = ? AND ValidTo IS NULL",
-                        modifiedDate,
-                        modifiedDate,
-						existingRecord.get(spec.getKeyColumn()));
+                invalidateOldRecord(spec, existingRecord);
 				persist(record, spec);
 			}
 		} else {
@@ -240,6 +236,18 @@ public class TilskudsblanketParser implements Parser {
 		}
 	}
 
+    private void invalidateOldRecord(RecordSpecification spec, Record existingRecord) {
+        Date modifiedDate = persister.getTransactionTime().toDateTime().toDate();
+        Object key = existingRecord.get(spec.getKeyColumn());
+        if (key != null) {
+            jdbcTemplate.update("UPDATE " + spec.getTable() + " SET ValidTo = ?, ModifiedDate = ? WHERE " + spec.getKeyColumn() + " = ? AND ValidTo IS NULL",
+                    modifiedDate, modifiedDate, key);
+        } else {
+            jdbcTemplate.update("UPDATE " + spec.getTable() + " SET ValidTo = ?, ModifiedDate = ? WHERE " + spec.getKeyColumn() + " IS NULL AND ValidTo IS NULL",
+                    modifiedDate, modifiedDate);
+        }
+    }
+
     /**
      * Tries to find a valid record in the database with same identifier as the record passed to the function
      * @param record
@@ -247,8 +255,16 @@ public class TilskudsblanketParser implements Parser {
      * @return the found record or null if it was not found
      */
 	private Record findRecordWithSameKey(Record record, RecordSpecification spec) {
+        // Key can be null
+        String strKey = null;
 		try {
-			return fetcher.fetchCurrent(record.get(spec.getKeyColumn())+"", spec);
+            Object key = record.get(spec.getKeyColumn());
+            if (key != null) {
+                strKey = "" + key;
+            } else {
+                System.out.println("break");
+            }
+            return fetcher.fetchCurrent(strKey, spec);
 		} catch (SQLException e) {
 			throw new ParserException("While trying to find record with same key as " + record + " and spec " + spec, e);
 		}

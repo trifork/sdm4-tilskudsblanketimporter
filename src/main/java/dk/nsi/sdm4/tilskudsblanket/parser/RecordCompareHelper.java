@@ -49,7 +49,7 @@ public class RecordCompareHelper {
         boolean equals = true;
         for (FieldSpecification fieldSpec : spec.getFieldSpecs()) {
             Object oA = recordA.get(fieldSpec.name);
-            Object oB = recordA.get(fieldSpec.name);
+            Object oB = recordB.get(fieldSpec.name);
             if (oA == null || oB == null) {
                 if (oA != null || oB != null) {
                     equals = false;
