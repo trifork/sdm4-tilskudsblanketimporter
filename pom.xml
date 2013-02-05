@@ -16,7 +16,7 @@
         <connection>scm:git:git@github.com:trifork/sdm4-tilskudsblanketimporter.git</connection>
         <developerConnection>scm:git:git@github.com:trifork/sdm4-tilskudsblanketimporter.git</developerConnection>
       <tag>HEAD</tag>
-  </scm>
+    </scm>
     <issueManagement>
         <system>JIRA</system>
         <url>https://jira.trifork.com/</url>
@@ -126,7 +126,7 @@
                             <arguments>
                                 <argument>ssh</argument>
                                 <argument>-c</argument>
-                                <argument>sudo -u jboss cp -R /vagrant/sdm4-${project.artifactId}/target/test-classes/data/ /pack/jboss/domain/data/sdm4/tilskudsblanketimporter/</argument>
+                                <argument>sudo -u jboss cp -R /vagrant/sdm4-${project.artifactId}/target/test-classes/data/set* /pack/jboss/domain/data/sdm4/tilskudsblanketimporter/</argument>
                             </arguments>
                         </configuration>
                     </execution>
