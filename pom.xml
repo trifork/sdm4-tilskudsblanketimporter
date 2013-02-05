@@ -9,13 +9,13 @@
 
 	<artifactId>tilskudsblanketimporter</artifactId>
 	<packaging>war</packaging>
-	<version>4.2-SNAPSHOT</version>
+	<version>4.2</version>
 
     <scm>
         <url>scm:git:git@github.com:trifork/sdm4-tilskudsblanketimporter.git</url>
         <connection>scm:git:git@github.com:trifork/sdm4-tilskudsblanketimporter.git</connection>
         <developerConnection>scm:git:git@github.com:trifork/sdm4-tilskudsblanketimporter.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>tilskudsblanketimporter-4.2</tag>
   </scm>
     <issueManagement>
         <system>JIRA</system>
@@ -58,7 +58,7 @@
 		<dependency>
 			<groupId>dk.nsi.stamdata4</groupId>
 			<artifactId>sdm-core</artifactId>
-			<version>4.6-SNAPSHOT</version>
+			<version>4.6</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
