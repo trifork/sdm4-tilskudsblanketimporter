@@ -114,7 +114,7 @@ public class TilskudsblanketParserSinglefilesIntegrationTest
 
 	@Test
 	public void persistsForhoejetTakst() throws Exception {
-	    importFile("data/set1/FT Takster.txt", TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC, null);
+	    importFile("data/set1/FT takster.txt", TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC, null);
 		assertEquals(3550, jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudForhoejetTakst WHERE ValidTo IS NULL"));
 	}
 
