@@ -96,11 +96,12 @@ public class TilskudsblanketParser implements Parser {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void process(File datadir) throws ParserException {
-		SLALogItem slaLogItem = slaLogger.createLogItem("TilskudsblanketParser", "All");
-
-		validateDataset(datadir);
-
+	public void process(File datadir, String identifier) throws ParserException {
+        SLALogItem slaLogItem = slaLogger.createLogItem(getHome()+".process", "SDM4."+getHome()+".process");
+        validateDataset(datadir);
+        slaLogItem.setMessageId(identifier);
+        slaLogItem.addCallParameter(Parser.SLA_INPUT_NAME, datadir.getAbsolutePath());
+        long processed = 0;
 		try {
 			assert datadir.listFiles() != null;
 			for (File file : datadir.listFiles()) {
@@ -108,7 +109,7 @@ public class TilskudsblanketParser implements Parser {
                 RecordSpecification spec = specsForFiles.get(filename);
 				if (spec != null) {
                     RecordEnricher enricher = enrichersForFiles.get(filename);
-					processSingleFile(file, spec, enricher);
+                    processed += processSingleFile(file, spec, enricher);
 				} else {
 					// hvis vi ikke har nogen spec, skal filen ikke processeres.
 					log.log(levelForUnexpectedFile(file), "Ignoring file " + file.getAbsolutePath());
@@ -117,11 +118,9 @@ public class TilskudsblanketParser implements Parser {
 		} catch (RuntimeException e) {
 			slaLogItem.setCallResultError("TilskudsblanketParser failed - Cause: " + e.getMessage());
 			slaLogItem.store();
-
 			throw new ParserException(e);
 		}
-
-
+        slaLogItem.addCallParameter(Parser.SLA_RECORDS_PROCESSED_MAME, ""+processed);
 		slaLogItem.setCallResultOk();
 		slaLogItem.store();
 	}
@@ -155,24 +154,19 @@ public class TilskudsblanketParser implements Parser {
 	}
 
 	// kun ikke-private for at tillade test, kaldes ikke udefra
-	void processSingleFile(File file, RecordSpecification spec, RecordEnricher enricher) {
+	long processSingleFile(File file, RecordSpecification spec, RecordEnricher enricher) {
 		if (log.isDebugEnabled()) {
 			log.debug("Processing file " + file + " with spec " + spec.getClass().getSimpleName());
 		}
-		SLALogItem slaLogItem = slaLogger.createLogItem("TilskudsblanketParser importer of file", file.getName());
-
+        long processed = 0;
 		try {
 			Set<Object> drugidsFromFile = parseAndPersistFile(file, spec, enricher);
 			invalidateRecordsRemovedFromFile(drugidsFromFile, spec);
-		} catch (RuntimeException e) {
-			slaLogItem.setCallResultError("TilskudsblanketParser failed - Cause: " + e.getMessage());
-			slaLogItem.store();
-
+            processed = drugidsFromFile.size();
+        } catch (RuntimeException e) {
 			throw new ParserException(e);
 		}
-
-		slaLogItem.setCallResultOk();
-		slaLogItem.store();
+        return processed;
 	}
 
     /**

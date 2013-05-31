@@ -58,17 +58,17 @@ public class TilskudsblanketParserFilesetTest {
     @Test
     public void processCompleteDataset() {
         File fileSet = FileUtils.toFile(getClass().getClassLoader().getResource("data/set1"));
-        parser.process(fileSet);
+        parser.process(fileSet, "");
     }
 
     @Test
     public void processDatasetTwice() {
         File fileSet = FileUtils.toFile(getClass().getClassLoader().getResource("data/set1"));
-        parser.process(fileSet);
+        parser.process(fileSet, "");
         int recordCount1 = jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketEnkelt");
 
         fileSet = FileUtils.toFile(getClass().getClassLoader().getResource("data/set1"));
-        parser.process(fileSet);
+        parser.process(fileSet, "");
         int recordCount2 = jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketEnkelt");
 
         // We should not get any new records since they are all the same just imported twice
@@ -78,10 +78,10 @@ public class TilskudsblanketParserFilesetTest {
     @Test
     public void importTwoDifferentDatasets() {
         File fileSet = FileUtils.toFile(getClass().getClassLoader().getResource("data/set1"));
-        parser.process(fileSet);
+        parser.process(fileSet, "");
         int recordCount1 = jdbcTemplate.queryForInt("SELECT COUNT(*) FROM TilskudsblanketEnkelt");
         fileSet = FileUtils.toFile(getClass().getClassLoader().getResource("data/set2"));
-        parser.process(fileSet);
+        parser.process(fileSet, "");
     }
 
 }
